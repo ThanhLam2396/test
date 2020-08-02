@@ -1,6 +1,7 @@
 pipeline {
 
   environment {
+    registry = "thanhlam2396/test"
     dockerImage = ""
   }
 
