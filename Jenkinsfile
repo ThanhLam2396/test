@@ -1,43 +1,32 @@
 pipeline {
-
-  environment {
-    registry = "thanhlam2396/test"
-    dockerImage = ""
-  }
-
   agent any
-
   stages {
 
-    stage('Checkout Source') {
+    stage('Git Pull Source') {
       steps {
-        git 'https://github.com/ThanhLam2396/test.git'
+       sh "chmod +x pullcode.sh"
+       sh "./pullcode.sh"
       }
     }
 
     stage('Build image') {
       steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
+        sh "chmod +x buildimages.sh"
+        sh "./buildimages.sh"
       }
     }
 
     stage('Push Image') {
       steps{
-        script {
-          docker.withRegistry( "" ) {
-            dockerImage.push()
-          }
-        }
+       sh "chmod +x pushimages.sh"
+       sh "./pushimages.sh"
       }
     }
 
     stage('Deploy App') {
       steps {
-        script {
-          kubernetesDeploy(configs: "myweb.yaml", kubeconfigId: "mykubeconfig")
-        }
+       sh "chmod +x deploy-k8s.sh"
+       sh "./deploy-k8s.sh"
       }
     }
 
